@@ -13,6 +13,11 @@ const app = express(); //express function을 사용해서 앱 만들기
 
 /* application 설정 */
 
+console.log(process.cwd());
+
+app.set("view engine", "pug");
+app.set("views", process.cwd() + "/src/views");
+
 const logger = morgan("dev");
 app.use(logger);
 
