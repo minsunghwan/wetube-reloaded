@@ -1,7 +1,11 @@
 extends base.pug
+include mixins/video
 
 
 block content 
-    h1 Home!
-    input(placeholder="Whats your name")
-    button send 
+    h2 Welcome here you will see the trendig vidoes
+    
+        each potato in videos
+            +video(potato)
+        else 
+            li Sorry Noting Found.
