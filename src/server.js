@@ -1,3 +1,6 @@
+import "./db"; // mongoDB FIEL 연결
+import Video from "./models/Video";
+
 import express from "express"; //node_modules에서 express를 찾아 import 하기
 import morgan from "morgan";
 
@@ -28,6 +31,6 @@ app.use("/users", userRouter);
 /* 외부에서 접속을 listen*/
 
 const handleListening = () =>
-  console.log(`Server  listenting on port http://localhost:${PORT} ❤️`);
+  console.log(`✅ Server  listenting on port http://localhost:${PORT} ❤️`);
 
 app.listen(PORT, handleListening); //port 번호 4000
