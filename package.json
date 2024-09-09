@@ -4,7 +4,7 @@
   "description": "The best way to watch a videos.",
   "scripts": {
     "win": "node index.js",
-    "dev": "nodemon --exec babel-node src/server.js"
+    "dev": "nodemon --exec babel-node src/init.js"
   },
   "repository": {
     "type": "git",
