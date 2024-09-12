@@ -1,7 +1,7 @@
 import express from "express"; //node_modules에서 express를 찾아 import 하기
 import morgan from "morgan";
 
-import globalRouter from "./routers/globalRouter";
+import rootRouter from "./routers/rootRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
 
@@ -17,9 +17,10 @@ app.set("view engine", "pug");
 app.set("views", process.cwd() + "/src/views");
 
 const logger = morgan("dev");
+
 app.use(logger);
 app.use(express.urlencoded({ extended: true }));
-app.use("/", globalRouter);
+app.use("/", rootRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
 
