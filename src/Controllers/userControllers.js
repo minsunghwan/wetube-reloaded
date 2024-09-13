@@ -61,6 +61,9 @@ export const postLogin = async (req, res) => {
     });
   }
   console.log("Log User In ! Coming Soon");
+
+  req.session.loggedIn = true;
+  req.session.user = user;
   res.redirect("/");
 };
 export const edit = (req, res) => res.send("Edit User");
