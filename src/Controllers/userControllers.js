@@ -142,9 +142,106 @@ export const finishGithubLogin = async (req, res) => {
     return res.redirect("/login");
   }
 };
-export const edit = (req, res) => res.send("Edit User");
+export const getEdit = (req, res) => {
+  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+};
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id, avatarUrl },
+    },
+    body: { name, email, username, location },
+    file,
+  } = req;
+
+  // const id = req.session.user.id 랑 위에 코드랑 같음
+  // const { name, email, username, location } = req.body;
+
+  //중복 확인
+  const existingUser = await User.findOne({
+    _id: { $ne: _id }, //현재 사용자 id는 제외함
+    $or: [{ email }, { username }],
+  });
+
+  if (existingUser) {
+    let errorMessage = "";
+    if (existingUser.email === email) {
+      errorMessage = "This email is alreday taken.";
+    } else if (existingUser.username === username) {
+      errorMessage = "This username is already taken.";
+    }
+    return res.render("edit-profile", {
+      pageTitle: "Edit Profile",
+      errorMessage,
+    });
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      avatarUrl: file ? file.path : avatarUrl,
+      name: name,
+      email: email,
+      username: username,
+      location: location,
+    },
+    { new: true }
+  );
+  // findByIdAndUpdate 의 반환값이 존재하는데 업데이트 이전 정보 new:false 적지않아도 default
+  // new: true 는 없데이트한 값을 반환
+  req.session.user = updatedUser;
+  // req.session.user = {
+  //   ...req.session.user,
+  //   name,
+  //   email,
+  //   username,
+  //   location,
+  // };
+  // 그냥 name,email ,,,,나열해도된다  es6 덕분
+  //...req.session.user, 안에있는 내용을 밖으로 꺼내준다.
+  return res.redirect("/users/edit");
+};
+
 export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
 };
+
+export const getChangePassword = (req, res) => {
+  if (req.session.user.socialOnly === true) {
+    return res.redirect("/");
+  }
+  return res.render("users/change-password", { pageTitle: "Change Password" });
+};
+export const postChangePassword = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { oldPassword, newPassword, newPasswordConfirmation },
+  } = req;
+  const user = await User.findById(_id);
+
+  const ok = await bcrypt.compare(oldPassword, user.password);
+
+  if (!ok) {
+    return res.status(400).render("users/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "The current password is incorrect",
+    });
+  }
+
+  if (newPassword !== newPasswordConfirmation) {
+    return res.status(400).render("users/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "The password does not match the confirmation",
+    });
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  return res.redirect("/users/logout");
+};
+
 export const see = (req, res) => res.send("See");
