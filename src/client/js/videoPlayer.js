@@ -131,3 +131,12 @@ if (video.readyState >= 1) {
 } else {
   video.addEventListener("loadedmetadata", handleLoadedMetadata);
 }
+
+const handleEnterOrExitFullScreen = (event) => {
+  if (event.code === "KeyF") {
+    videoContainer.requestFullscreen();
+  } else if (event.code === "Escape") {
+    document.exitFullscreen();
+  }
+};
+document.addEventListener("keydown", handleEnterOrExitFullScreen);
