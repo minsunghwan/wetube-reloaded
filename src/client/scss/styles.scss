@@ -1,6 +1,11 @@
-@import "./_variables";
+//Config
 
-body {
-    // background-color: $red;
-    color:$color;
-}
+@import "./config/variables";
+@import "./config/reset";
+
+
+
+//Components 
+
+@import "./components/footer.scss";
+@import "./components/forms.scss";
