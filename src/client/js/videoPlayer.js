@@ -1,5 +1,3 @@
-console.log("video Player");
-
 const video = document.querySelector("video");
 const playBtn = document.getElementById("play");
 const muteBtn = document.getElementById("mute");

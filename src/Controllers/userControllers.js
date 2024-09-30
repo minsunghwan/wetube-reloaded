@@ -204,11 +204,13 @@ export const postEdit = async (req, res) => {
 
 export const logout = (req, res) => {
   req.session.destroy();
+  // req.flash("info", "Bye Bye");
   return res.redirect("/");
 };
 
 export const getChangePassword = (req, res) => {
   if (req.session.user.socialOnly === true) {
+    req.flash("error", "Can't change password");
     return res.redirect("/");
   }
   return res.render("users/change-password", { pageTitle: "Change Password" });
@@ -240,8 +242,20 @@ export const postChangePassword = async (req, res) => {
 
   user.password = newPassword;
   await user.save();
+  req.flash("info", "Password Updated");
 
   return res.redirect("/users/logout");
 };
 
-export const see = (req, res) => res.send("See");
+export const see = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id).populate("videos");
+  if (!user) {
+    return res.status(404).render("404", { pageTitle: "User not found" });
+  }
+
+  return res.render("users/profile", {
+    pageTitle: user.name,
+    user,
+  });
+};
