@@ -16,6 +16,7 @@ let volumeValue = 0.5;
 video.volume = volumeValue;
 
 const handlePlayClick = (e) => {
+  console.log("you find video ?  ", video);
   if (video.paused) {
     video.play();
   } else {
@@ -83,7 +84,7 @@ const hideControls = () => videoControls.classList.remove("showing");
 const handleMouseMove = () => {
   if (controlsTimeout) {
     clearTimeout(controlsTimeout);
-    clearTimeout = null;
+    controlsTimeout = null;
   }
 
   if (controlsMovementTimeout) {
@@ -99,10 +100,15 @@ const handleMouseLeave = () => {
   controlsTimeout = setTimeout(hideControls, 3000);
 };
 
+const handleEnded = () => {
+  console.log("video finish");
+};
+
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMute);
 volumeRange.addEventListener("input", handleVolumeChange);
 video.addEventListener("timeupdate", handleTimeUpdate);
+video.addEventListener("ended", handleEnded);
 timeline.addEventListener("input", handleTimelineChange);
 fullScreenBtn.addEventListener("click", handleFullScreen);
 videoContainer.addEventListener("mousemove", handleMouseMove);

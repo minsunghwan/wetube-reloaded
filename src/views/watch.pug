@@ -1,42 +1,3 @@
-//- extends base.pug
-
-
-//- block content
-//-     div#videoContainer
-//-         video(src="/" + video.fileUrl  )
-//-         div#videoControls 
-//-             button#play Play 
-//-             button#mute Mute
-//-             input(type="range" ,step="0.1",value=0.5,min="0",max="1")#volume
-//-             div
-//-                 span#currentTime 00:00 
-//-                 span /
-//-                 span#totalTime  00:00
-//-             div
-//-                 input(type="range" ,step="1",value=0,min="0")#timeline
-//-             div 
-//-                 button#fullScreen Enter full Screen
-//-                 hr
-//-         div 
-//-             small Uploaded By User 
-//-                 a(href=`/users/${video.owner._id}`)=video.owner.name
-        
-//-         div
-//-             hr
-//-             p=video.description
-//-             br
-//-             small=video.createdAt
-//-             br
-//-             small=video.owner._id
-//-             br
-//-             small=loggedInUser._id
-//-             br
-//-             if String(video.owner._id) === String(loggedInUser._id)
-//-                 a(href=`${video.id}/edit`) Edit Video &rarr;
-//-                 br
-//-                 a(href=`${video.id}/delete`) Delete Video &rarr;
-//- block scripts
-//-   script(src="/static/js/videoPlayer.js")
 extends base
 
 block content
@@ -47,7 +8,7 @@ block content
                 span#play.videoControls__playBtn
                     i.fas.fa-play
                 div.videoControls__time
-                    span#currenTime 00:00
+                    span#currentTime 00:00
                     span  / 
                     span#totalTime 00:00
             input(type="range",step="1", value="0", min="0")#timeline.videoControls__timeline
@@ -68,9 +29,5 @@ block content
             a(href=`${video.id}/edit`) Edit Video &rarr;
             br
             a(href=`${video.id}/delete`) Delete Video &rarr;
-  
-
 block scripts
     script(src="/static/js/videoPlayer.js")
-
-    

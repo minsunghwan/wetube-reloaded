@@ -15,6 +15,7 @@ export const watch = async (req, res) => {
   if (!video) {
     return res.status(404).render("404", { pageTitle: "Video Not Found" });
   }
+
   return res.render("watch", { pageTitle: video.title, video: video });
 };
 
@@ -68,17 +69,28 @@ export const postUpload = async (req, res) => {
   const { video, thumb } = req.files; //path를 얻어 fileUrl 대입 -es6
   const { title, hashtags, description } = req.body;
   try {
+    // const newVideo = await Video.create({
+    //   title,
+    //   description,
+    //   fileUrl: video[0].path,
+    //   thumbUrl: thumb[0].path,
+    //   hashtags: Video.formatHashtags(hashtags),
+    //   owner: _id,
+    // });
+
     const newVideo = await Video.create({
       title,
       description,
-      fileUrl: video[0].path,
-      thumbUrl: thumb[0].path,
+      fileUrl: video[0].path.replace(/\\/g, "/"), // 경로의 역슬래시 문제 해결
+      thumbUrl: thumb[0].path.replace(/\\/g, "/"), // 경로의 역슬래시 문제 해결
       hashtags: Video.formatHashtags(hashtags),
       owner: _id,
     });
+
     const user = await User.findById(_id);
     user.videos.push(newVideo._id);
     user.save();
+
     return res.redirect("/");
   } catch {
     return res.status(400).render("upload", {
@@ -124,4 +136,16 @@ export const search = async (req, res) => {
     return res.render("search", { pageTitle: "Search", videos });
   }
   return res.render("search", { pageTitle: "Search", videos });
+};
+
+export const registerView = async (req, res) => {
+  const { id } = req.params;
+  const video = await Video.findById(id);
+  if (!video) {
+    return res.status(404);
+  }
+
+  video.meta.views = video.meta.views + 1;
+  await video.save();
+  return res.status(200);
 };
